@@ -1,5 +1,5 @@
 ### Enviar ticket solo con texto (asunto)
-POST http://localhost:4000/api/issues
+POST http://localhost:git /api/issues
 Content-Type: multipart/form-data; boundary=----TicketBoundary
 
 ------TicketBoundary
