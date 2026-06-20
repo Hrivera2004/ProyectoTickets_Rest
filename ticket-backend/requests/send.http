@@ -1,0 +1,25 @@
+### Enviar ticket solo con texto (asunto)
+POST http://localhost:4000/api/issues
+Content-Type: multipart/form-data; boundary=----TicketBoundary
+
+------TicketBoundary
+Content-Disposition: form-data; name="subject"
+
+Ticket de prueba desde backend (solo texto)
+------TicketBoundary--
+
+### Enviar ticket con imagen adjunta (captura de pantalla)
+# Coloca un archivo captura.png en esta misma carpeta antes de correr esta petición
+POST http://localhost:4000/api/issues
+Content-Type: multipart/form-data; boundary=----TicketBoundary
+
+------TicketBoundary
+Content-Disposition: form-data; name="subject"
+
+Ticket de prueba con captura de pantalla
+------TicketBoundary
+Content-Disposition: form-data; name="image"; filename="captura.png"
+Content-Type: image/png
+
+< ./captura.png
+------TicketBoundary--

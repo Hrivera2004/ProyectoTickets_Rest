@@ -1,0 +1,2 @@
+### Listar tickets a través del backend
+GET http://localhost:4000/api/issues
