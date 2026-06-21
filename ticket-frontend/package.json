@@ -1,0 +1,12 @@
+{
+  "name": "ticket-frontend",
+  "version": "1.0.0",
+  "description": "Frontend de demostración para el Sistema de Tickets",
+  "scripts": {
+    "build": "tsc",
+    "serve": "npx http-server . -p 5500"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}

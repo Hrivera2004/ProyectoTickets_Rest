@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MiApp — Demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header id="top-navbar">
+    <span class="brand">App.ejemplo</span>
+    <span class="avatar">A</span>
+  </header>
+
+  <main id="app-content">
+    <div class="sidebar">
+      <div class="sidebar-item active">Dashboard</div>
+      <div class="sidebar-item"></div>
+      <div class="sidebar-item"></div>
+    </div>
+    <div class="content-area">
+      <div class="card card-lg"></div>
+      <div class="card-row">
+        <div class="card"></div>
+        <div class="card"></div>
+      </div>
+    </div>
+  </main>
+
+  <button id="report-toggle" type="button" aria-label="Reportar un problema">☰</button>
+
+  <div id="report-widget" class="hidden">
+    <div class="widget-header">
+      <span>Reportar problema</span>
+      <button id="report-close" type="button" aria-label="Cerrar">✕</button>
+    </div>
+    <textarea id="report-text" placeholder="Describe el problema..."></textarea>
+    <button id="report-send" type="button">➤ Enviar reporte</button>
+  </div>
+
+  <div id="toast" class="hidden"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

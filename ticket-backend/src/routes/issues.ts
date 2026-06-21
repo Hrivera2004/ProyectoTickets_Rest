@@ -9,14 +9,8 @@ import {
 
 const router = Router();
 
-// Guarda el archivo en memoria; no escribimos a disco porque solo
-// lo reenviamos a Redmine.
 const upload = multer({ storage: multer.memoryStorage() });
 
-/**
- * GET /api/issues
- * Lista los tickets del proyecto configurado en .env
- */
 router.get("/", async (_req: Request, res: Response) => {
   try {
     const response = await redmine.get("/issues.json", {
@@ -24,22 +18,17 @@ router.get("/", async (_req: Request, res: Response) => {
     });
     res.json(response.data);
   } catch (error: any) {
-    console.error(
-      "Error al listar issues:",
-      error.response?.data || error.message
-    );
-    res.status(500).json({ error: "No se pudo obtener la lista de issues" });
+    const status = error.response?.status || 500;
+    const detail = error.response?.data || error.message;
+    console.error("Error al listar issues:", detail);
+    res.status(status).json({
+      error: "No se pudo obtener la lista de issues",
+      status,
+      detail,
+    });
   }
 });
 
-/**
- * POST /api/issues
- * Crea un ticket. Acepta multipart/form-data con:
- *   - subject: string (requerido)
- *   - image: archivo (opcional)
- * Si viene imagen, primero se sube a Redmine (/uploads.json) y
- * luego se adjunta al issue usando el token devuelto.
- */
 router.post(
   "/",
   upload.single("image"),
@@ -77,11 +66,14 @@ router.post(
       const issueResponse = await redmine.post("/issues.json", payload);
       res.status(201).json(issueResponse.data);
     } catch (error: any) {
-      console.error(
-        "Error al crear issue:",
-        error.response?.data || error.message
-      );
-      res.status(500).json({ error: "No se pudo crear el issue" });
+      const status = error.response?.status || 500;
+      const detail = error.response?.data || error.message;
+      console.error("Error al crear issue:", detail);
+      res.status(status).json({
+        error: "No se pudo crear el issue",
+        status,
+        detail,
+      });
     }
   }
 );
