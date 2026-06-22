@@ -5,11 +5,11 @@ declare function html2canvas(
 
 const API_URL = "http://localhost:4000/api/issues";
 
-const appContent = document.getElementById("app-content") as HTMLElement;
 const toggleBtn = document.getElementById("report-toggle") as HTMLButtonElement;
 const widget = document.getElementById("report-widget") as HTMLDivElement;
 const closeBtn = document.getElementById("report-close") as HTMLButtonElement;
 const textArea = document.getElementById("report-text") as HTMLTextAreaElement;
+const screenshotCheck = document.getElementById("report-screenshot") as HTMLInputElement;
 const sendBtn = document.getElementById("report-send") as HTMLButtonElement;
 const toast = document.getElementById("toast") as HTMLDivElement;
 
@@ -27,6 +27,20 @@ function showToast(message: string, isError = false): void {
   toast.classList.toggle("error", isError);
   toast.classList.remove("hidden");
   setTimeout(() => toast.classList.add("hidden"), 3000);
+}
+
+async function captureScreen(): Promise<Blob | null> {
+  // Ocultar elementos flotantes para que no aparezcan en la captura
+  toggleBtn.style.display = "none";
+  widget.style.display = "none";
+
+  try {
+    const canvas = await html2canvas(document.body, { useCORS: true });
+    return await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+  } finally {
+    toggleBtn.style.display = "";
+    widget.style.display = "";
+  }
 }
 
 toggleBtn.addEventListener("click", () => {
@@ -49,20 +63,19 @@ sendBtn.addEventListener("click", async () => {
     return;
   }
 
+  const includeScreenshot = screenshotCheck.checked;
+
   closeWidget();
 
   try {
-
-    const canvas = await html2canvas(appContent);
-    const blob: Blob | null = await new Promise((resolve) =>
-      canvas.toBlob(resolve, "image/png")
-    );
-
     const formData = new FormData();
     formData.append("subject", subject);
 
-    if (blob) {
-      formData.append("image", blob, "captura.png");
+    if (includeScreenshot) {
+      const blob = await captureScreen();
+      if (blob) {
+        formData.append("image", blob, "captura.png");
+      }
     }
 
     const res = await fetch(API_URL, {
@@ -76,6 +89,7 @@ sendBtn.addEventListener("click", async () => {
 
     showToast("Reporte enviado correctamente");
     textArea.value = "";
+    screenshotCheck.checked = false;
   } catch (error) {
     console.error("Error al enviar el reporte:", error);
     showToast("Ocurrió un error al enviar el reporte", true);
